@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>AIdea ボード｜投稿</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="closed-banner hidden" id="closed">この部屋は閉じられました（投稿は受け付けていません）</div>
+
+    <div class="tabs" role="tablist">
+      <div class="tab" id="tab-input" role="tab" aria-selected="true">コメント入力</div>
+      <div class="tab" id="tab-board" role="tab" aria-selected="false">ボードを見る</div>
+    </div>
+
+    <!-- 入力タブ -->
+    <div class="tabpane" id="pane-input">
+      <form class="post-form" id="form" onsubmit="return false;">
+        <p class="field-label">テーマ</p>
+        <h1 class="post-prompt" id="prompt">読み込み中…</h1>
+        <div class="notice">⚠️ 個人名・学校名・顧客名・非公開情報は書かないでください。投稿は匿名で表示されます。</div>
+        <label class="field-label" for="body">あなたの投稿（100文字まで）</label>
+        <textarea class="input post-body" id="body" maxlength="100" placeholder="例：毎週の報告メールを書くのが面倒"></textarea>
+        <div class="counter" id="counter">0 / 100</div>
+        <button class="submit-btn" id="submit" disabled>送信する</button>
+        <div class="flash hidden" id="flash"></div>
+      </form>
+    </div>
+
+    <!-- ボードタブ -->
+    <div class="tabpane hidden" id="pane-board">
+      <div class="stage" id="stage">
+        <div class="board-empty" id="empty">まだ投稿はありません</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/common.js"></script>
+  <script src="assets/post.js"></script>
+</body>
+</html>

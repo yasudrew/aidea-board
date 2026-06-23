@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIdea ボード｜管理ボード</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <span class="title" id="title">AIdea ボード</span>
+      <span class="count-badge" id="count">0 件</span>
+      <button class="btn" id="share">参加リンク</button>
+      <button class="btn" id="csv">CSV保存</button>
+      <button class="btn danger" id="reset">全リセット</button>
+      <button class="btn danger" id="close">部屋を閉じる</button>
+    </div>
+    <div class="closed-banner hidden" id="closed">この部屋は閉じられています</div>
+    <div class="stage draggable" id="stage">
+      <div class="board-empty" id="empty">参加者の投稿を待っています…</div>
+    </div>
+  </div>
+
+  <!-- 参加リンク用モーダル -->
+  <div id="modal" class="hidden" style="position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px;z-index:100;">
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:360px;width:100%;text-align:center;">
+      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:8px;">参加者に配るリンク</div>
+      <div id="modalqr" style="display:inline-block;background:#fff;padding:8px;border-radius:10px;"></div>
+      <input class="input" id="modalurl" readonly style="margin-top:12px;font-size:0.8rem;" />
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <button class="btn" id="modalcopy" style="flex:1;">コピー</button>
+        <button class="btn" id="modalclose" style="flex:1;">閉じる</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/common.js"></script>
+  <script src="assets/board.js"></script>
+</body>
+</html>

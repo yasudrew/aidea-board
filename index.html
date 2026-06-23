@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIdea ボード｜部屋を作る</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <main class="create-wrap">
+    <h1>AIdea ボード</h1>
+    <p class="lead">テーマを決めて部屋を作ると、参加者用と管理者用のリンクが発行されます。アカウント登録は不要です。</p>
+
+    <div id="form">
+      <label class="field-label" for="title">テーマ（自由入力：お題でも「〇〇について考える」「〇〇部屋」でもOK）</label>
+      <input class="input" id="title" maxlength="60" placeholder="例：業務効率化について考える部屋" />
+      <div class="presets" id="presets"></div>
+      <button class="btn primary" id="make" style="margin-top:20px;width:100%;padding:14px;font-size:1.05rem;">部屋を作る</button>
+      <div class="flash err hidden" id="err"></div>
+    </div>
+
+    <div id="result" class="links-box hidden">
+      <div class="link-row">
+        <div class="cap">参加者に配るリンク（QR可）</div>
+        <div class="link-flex">
+          <input class="input" id="plink" readonly />
+          <button class="btn" data-copy="plink">コピー</button>
+        </div>
+        <div id="qrbox"></div>
+      </div>
+      <div class="link-row">
+        <div class="cap admin">管理者リンク（あなた専用・共有しない）</div>
+        <div class="link-flex">
+          <input class="input" id="alink" readonly />
+          <button class="btn" data-copy="alink">コピー</button>
+        </div>
+      </div>
+      <div class="warn">⚠️ 管理者リンクは投稿の非表示・移動・リセット・部屋を閉じる操作ができます。参加者には渡さないでください。</div>
+      <div style="margin-top:14px;display:flex;gap:8px;">
+        <button class="btn primary" id="openboard">管理ボードを開く</button>
+        <button class="btn" id="again">別の部屋を作る</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/common.js"></script>
+  <script src="assets/create.js"></script>
+</body>
+</html>
