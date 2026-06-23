@@ -6,7 +6,7 @@ window.IB = (function () {
   // 意味を持たない見た目用パステル(付箋色)
   const PAPER = ["#FAEEDA", "#E6F1FB", "#E1F5EE", "#FBEAF0", "#EAF3DE", "#EEEDFE"];
 
-  const NOTE_W = 160, NOTE_H = 84;
+  const NOTE_W = 210, NOTE_H = 104;
 
   const q = (k) => new URLSearchParams(location.search).get(k);
 
