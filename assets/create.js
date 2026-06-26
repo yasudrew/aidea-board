@@ -1,6 +1,6 @@
 // 部屋作成ロジック
 (function () {
-  const { sb, cfg } = IB;
+  const { sb } = IB;
   const $title = document.getElementById("title");
   const $make = document.getElementById("make");
   const $err = document.getElementById("err");
@@ -8,16 +8,6 @@
   const $result = document.getElementById("result");
   const $plink = document.getElementById("plink");
   const $alink = document.getElementById("alink");
-
-  // テーマのプリセット
-  const $presets = document.getElementById("presets");
-  cfg.THEME_PRESETS.forEach((p) => {
-    const b = document.createElement("button");
-    b.className = "preset";
-    b.textContent = p;
-    b.addEventListener("click", () => { $title.value = p; $title.focus(); });
-    $presets.appendChild(b);
-  });
 
   function baseUrl() {
     return location.href.replace(/index\.html.*$/, "").replace(/\/?$/, "/");

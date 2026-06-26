@@ -32,7 +32,10 @@ button, input, textarea, select { font-family: inherit; }
 /* ============================================================
    部屋作成(index.html)
    ============================================================ */
-.create-wrap { max-width: 600px; margin: 0 auto; padding: 32px 16px 64px; }
+.create-wrap {
+  max-width: 600px; margin: 0 auto; padding: 32px 16px;
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+}
 .create-wrap h1 { font-size: 1.6rem; margin: 0 0 6px; }
 .create-wrap .lead { color: var(--muted); margin: 0 0 24px; line-height: 1.6; }
 .field-label { display: block; font-size: 0.85rem; color: var(--muted); margin: 16px 0 8px; }

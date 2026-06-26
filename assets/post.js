@@ -1,4 +1,4 @@
-// 参加者ロジック（入力 + ボード閲覧タブ）
+// 参加者ロジック（入力専用。リアルタイム購読は持たない＝拡散負荷ゼロ）
 (function () {
   const { sb, q } = IB;
   const room = q("room");
@@ -9,7 +9,6 @@
   const $submit = document.getElementById("submit");
   const $flash = document.getElementById("flash");
   const $closed = document.getElementById("closed");
-  const $empty = document.getElementById("empty");
 
   if (!room) {
     $prompt.textContent = "部屋が指定されていません";
@@ -19,29 +18,6 @@
 
   let isOpen = true;
 
-  // ---- タブ切替 ----
-  const tabs = {
-    input: { tab: document.getElementById("tab-input"), pane: document.getElementById("pane-input") },
-    board: { tab: document.getElementById("tab-board"), pane: document.getElementById("pane-board") },
-  };
-  function selectTab(key) {
-    Object.entries(tabs).forEach(([k, v]) => {
-      const on = k === key;
-      v.tab.setAttribute("aria-selected", on ? "true" : "false");
-      v.pane.classList.toggle("hidden", !on);
-    });
-    if (key === "board") board.relayout();
-  }
-  tabs.input.tab.addEventListener("click", () => selectTab("input"));
-  tabs.board.tab.addEventListener("click", () => selectTab("board"));
-
-  // ---- ボード（閲覧専用） ----
-  const board = new IB.Board(document.getElementById("stage"), {
-    draggable: false,
-    onChange: (n) => { $empty.style.display = n ? "none" : "flex"; },
-  });
-
-  // ---- 入力 ----
   function refresh() {
     const len = $body.value.trim().length;
     $counter.textContent = `${$body.value.length} / 100`;
@@ -53,6 +29,12 @@
   function flash(msg, ok) {
     $flash.textContent = msg;
     $flash.className = "flash " + (ok ? "ok" : "err");
+  }
+
+  function setClosed() {
+    isOpen = false;
+    $closed.classList.remove("hidden");
+    refresh();
   }
 
   $submit.addEventListener("click", async () => {
@@ -69,22 +51,16 @@
       refresh();
     } catch (e) {
       console.error(e);
-      flash("送信できませんでした。部屋が閉じられているか、通信環境をご確認ください。", false);
+      flash("送信できませんでした。部屋が閉じられている可能性があります。", false);
+      setClosed();
     } finally {
       $submit.textContent = "送信する";
       refresh();
     }
   });
 
-  function setClosed() {
-    isOpen = false;
-    $closed.classList.remove("hidden");
-    refresh();
-  }
-
-  // ---- 初期化 ----
+  // 初期化: テーマと開閉状態を1回だけ取得（以降はリアルタイム購読しない）
   async function init() {
-    // お題と開閉状態
     const { data: rinfo } = await sb.from("rooms_public").select("title,is_open").eq("id", room).single();
     if (rinfo) {
       $prompt.textContent = rinfo.title || "（テーマ未設定）";
@@ -92,28 +68,6 @@
     } else {
       $prompt.textContent = "（テーマ未設定）";
     }
-
-    // 既存投稿
-    const { data: posts } = await sb.from("posts")
-      .select("*").eq("room_id", room).eq("hidden", false)
-      .order("created_at", { ascending: true });
-    if (posts) board.setAll(posts);
-
-    // Realtime（投稿の追加・移動・非表示）
-    sb.channel("posts-" + room)
-      .on("postgres_changes",
-        { event: "*", schema: "public", table: "posts", filter: "room_id=eq." + room },
-        (payload) => {
-          if (payload.eventType === "DELETE") board.remove(payload.old.id);
-          else board.upsert(payload.new);
-        })
-      .subscribe();
-
-    // 部屋を閉じた通知（管理者からの broadcast）
-    sb.channel("room:" + room)
-      .on("broadcast", { event: "closed" }, () => setClosed())
-      .subscribe();
-
     refresh();
   }
   init();

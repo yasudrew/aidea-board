@@ -17,10 +17,8 @@
   // 参加リンク（key を除いたもの）
   const participantUrl =
     location.href.replace(/board\.html.*$/, "") + "post.html?room=" + encodeURIComponent(room);
-
-  // broadcast チャンネル（部屋を閉じた通知用）
-  const roomCh = sb.channel("room:" + room);
-  roomCh.subscribe();
+  // トップ（部屋作成）画面のURL
+  const topUrl = location.href.replace(/board\.html.*$/, "") + "index.html";
 
   async function rpc(fn, args) {
     const { error } = await sb.rpc(fn, Object.assign({ p_room_id: room, p_token: key }, args));
@@ -45,11 +43,23 @@
     if (await rpc("admin_reset", {})) board.clear();
   });
 
-  document.getElementById("close").addEventListener("click", async () => {
-    if (!confirm("部屋を閉じます。以降、参加者は投稿できなくなります。よろしいですか？")) return;
+  // 部屋を閉じる → モーダルで確認 → 実行したらトップへ戻る
+  const $closeModal = document.getElementById("closemodal");
+  document.getElementById("close").addEventListener("click", () => {
+    $closeModal.classList.remove("hidden");
+  });
+  document.getElementById("closecancel").addEventListener("click", () => {
+    $closeModal.classList.add("hidden");
+  });
+  document.getElementById("closeconfirm").addEventListener("click", async () => {
+    const btn = document.getElementById("closeconfirm");
+    btn.disabled = true;
+    btn.textContent = "閉じています…";
     if (await rpc("admin_close_room", {})) {
-      roomCh.send({ type: "broadcast", event: "closed", payload: {} });
-      $closed.classList.remove("hidden");
+      location.href = topUrl; // トップ（部屋作成）画面へ
+    } else {
+      btn.disabled = false;
+      btn.textContent = "閉じる";
     }
   });
 

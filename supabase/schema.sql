@@ -156,3 +156,8 @@ begin
     alter publication supabase_realtime add table public.posts;
   end if;
 end $$;
+
+-- DELETE イベントでも全カラム(room_id 含む)を配信させる。
+-- これがないと、購読フィルタ(room_id=eq.X)に DELETE が一致せず、
+-- 全リセット等の削除が参加者側にリアルタイム反映されない。
+alter table public.posts replica identity full;
